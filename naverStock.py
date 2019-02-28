@@ -8,6 +8,7 @@ import json
 from urllib import parse
 import json
 from collections import OrderedDict
+from datetime import datetime
 
 def price_stock(code_num):
     basic_url = "https://finance.naver.com/item/main.nhn?code="
@@ -40,7 +41,17 @@ for row in range(len(stock_list)):
         else:
             code=stock_list[row][col]
         stock_data[name] = price_stock(code)
+
+now = datetime.now()
+
+stock_data['all_time'] = '%s-%s-%s %s:%s:%s'%(now.year, now.month, now.day, now.hour, now.minute, now.second)
+stock_data['year'] = now.year
+stock_data['month'] = now.month
+stock_data['day'] = now.day
+stock_data['hour'] = now.hour
+stock_data['minute'] = now.minute
+stock_data['second'] = now.second
+
+
+        
 print(json.dumps(stock_data, ensure_ascii=False, indent="\t"))
-# code_list = ['286940','004990','011170','023530','004000']
-# name_list = ['롯데정보통신','롯데지주','롯데케미칼','롯데쇼핑','롯데정밀화학']
-# print(price_stock("286940"))
