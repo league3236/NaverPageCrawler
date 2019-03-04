@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+	# -*- coding: utf-8 -*-
 
     
     
@@ -12,7 +12,6 @@ from datetime import datetime
 
 def price_stock(code_num):
     basic_url = "https://finance.naver.com/item/main.nhn?code="
-#     code_num = "286940"
     full_url = basic_url+code_num
     
     fp = urllib.request.urlopen(full_url)
@@ -20,19 +19,31 @@ def price_stock(code_num):
     fp.close()
 
     soup = BeautifulSoup(source, 'html.parser')
-    soup = soup.findAll("em",class_="no_down")
+    try :
+        soup = soup.findAll("em",class_="no_up")
+    except :
+        soup = soup.findAll("em",class_="no_down") #장 마감
     soup = soup[0]
     soup = soup.findAll("span")
-    
     return soup[0].string
 
-stock_list = [['롯데정보통신','286940'],
-             ['롯데지주','004990'],
-             ['롯데케미칼','011170'],
-             ['롯데쇼핑','023530'],
-             ['롯데정밀화학', '004000']]
+def kospi_stock():
+    basic_url = "https://finance.naver.com/sise/"
+    
+    fp = urllib.request.urlopen(basic_url)
+    source = fp.read()
+    fp.close()
+
+    soup = BeautifulSoup(source, 'html.parser')
+    soup = soup.findAll("span",class_="num")
+
+    return soup[0].string
+
+
+stock_list = [['주이름','주 번호']]
 
 stock_data = OrderedDict()
+stock_data['kospi'] = kospi_stock()
 
 for row in range(len(stock_list)):
     for col in range(len(stock_list[0])):
